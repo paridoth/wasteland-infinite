@@ -1,0 +1,1 @@
+"""Wasteland Infinite factions module."""

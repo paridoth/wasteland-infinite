@@ -1,3 +1,62 @@
+# Wasteland Infinite — experimental Fallout 2 CE modification
+
+Modified for Wasteland Infinite; upstream attribution and Sustainable Use License
+are preserved below and in LICENSE.md. Personal/noncommercial development.
+
+This isolated checkout contains a working build and an **asset-free procedural
+proof**, plus a compiled runtime placement hook. **Playable/graphical validation
+is pending legitimately owned Fallout 2 data.** No game data was found or downloaded.
+The original campaign and its native systems remain the engine foundation.
+
+```sh
+# Mint 22.x: documented dependencies (already installed on the development host)
+sudo apt install build-essential cmake ninja-build libsdl2-dev zlib1g-dev python3
+
+# Build the opt-in engine and run all asset-free tests; no downloads/API key
+./tools/wasteland/test.sh
+
+# Actual engine executable, headless synthetic location inspection
+./out/build/wi-dev/fallout2-ce --wi-inspect=42
+```
+
+The default build keeps the feature OFF:
+
+```sh
+cmake -S . -B out/build/wi-legacy -G Ninja -DCMAKE_BUILD_TYPE=Release -DFALLOUT_VENDORED=OFF -DWASTELAND_INFINITE=OFF
+cmake --build out/build/wi-legacy --target fallout2-ce -j 4
+```
+
+To try placement **only in a separate copy** of owned vanilla data:
+
+```sh
+python3 tools/wasteland/stage_runtime.py /path/to/owned/Fallout2
+(cd runtime/proof && ../../out/build/wi-dev/fallout2-ce --wi-dev-seed=42)
+# Select NEW GAME. Inspect three loot objects near the starting entrance.
+```
+
+Staging refuses an existing destination, copies archives/loose data, excludes
+saves/caches, creates fresh relative config and builds optional CE UI data from
+upstream's tracked files. Original data/configuration are only read. Development
+mode requires that isolated runtime, rejects save/config command-line overrides,
+and only populates a fresh ARTEMPLE.MAP. The synthetic inspector fixture is not
+that map. `wasteland-location.json` is diagnostic output, not a campaign save.
+No HTTP service, persistent Director, NPC memory or generated quests is claimed yet.
+
+Source: https://github.com/fallout2-ce/fallout2-ce.git at
+`6de8078f02884db8d006bfff490ba05f3af5aabc` (tag `wi-upstream-baseline`).
+The original checkout failed to build after an upstream MapElevation change;
+a separate commit fixes one local variable's type. See
+[baseline evidence](docs/wasteland/BASELINE.md),
+[engine integration audit](ENGINE_INTEGRATION.md),
+[architecture](ARCHITECTURE.md), [roadmap/test gaps](ROADMAP.md), [session validation](docs/wasteland/VALIDATION.md), and
+[asset handling](assets/README.md).
+
+Layout adaptation: this pre-existing engine/ Git checkout remains intact;
+project modules live inside it beside src/ to fit the writable workspace.
+Wasteland C++ sources are isolated in src/wasteland; upstream README follows.
+
+---
+
 # Fallout 2: Community Engine
 
 Fallout 2:CE is a fully working re-implementation of the classic Fallout engine, optimized for a hassle-free experience on multiple platforms, including Windows, Mac, iOS, Android, and Linux.  It provides high resolution support, quality-of-life improvements, and dozens upon dozens of bug fixes.

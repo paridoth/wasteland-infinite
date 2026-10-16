@@ -44,6 +44,11 @@
 #include "word_wrap.h"
 #include "worldmap.h"
 
+// Wasteland Infinite opt-in extension; upstream behavior when compiled out.
+#ifdef WASTELAND_INFINITE
+#include "wasteland/runtime.h"
+#endif
+
 namespace fallout {
 
 static bool falloutInit(int argc, char** argv);
@@ -355,7 +360,13 @@ static int _main_load_new(char* mapFileName)
     mapInit();
     gameMouseSetCursor(MOUSE_CURSOR_NONE);
     mouseShowCursor();
+#ifdef WASTELAND_INFINITE
+    if (mapLoadByName(mapFileName) == 0) {
+        wasteland::populateNewGame();
+    }
+#else
     mapLoadByName(mapFileName);
+#endif
 
     // SFALL: Fix the starting position of the player's marker on the world map
     // when starting a new game with a custom starting map.

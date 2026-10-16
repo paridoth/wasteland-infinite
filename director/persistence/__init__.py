@@ -1,0 +1,1 @@
+"""Wasteland Infinite persistence module."""

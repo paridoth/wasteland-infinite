@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "templates": [
+    {
+      "id": "fixture.courtyard.v1",
+      "map": "fixture-only",
+      "asset_status": "synthetic geometry; no engine map or art",
+      "runtime_validated": false
+    },
+    {
+      "id": "engine.artemple.v1",
+      "map": "ARTEMPLE.MAP",
+      "asset_status": "upstream new-game map name; requires owned game data",
+      "runtime_validated": false
+    }
+  ],
+  "prototypes": {
+    "vanilla.money": "fallout::ItemProtoTypeId::Money",
+    "vanilla.stimpak": "fallout::ItemProtoTypeId::Stimpak"
+  }
+}

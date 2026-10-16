@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "generator_version": 1,
+  "cases": [
+    {
+      "seed": "0",
+      "sha256": "66637784771168a492a3464714ff2470d6ea692ab7e0295612660c3ee4b087ed",
+      "spawns": [
+        {
+          "id": "loc-0000000000000000-fixture.courtyard.v1.loot-0",
+          "hex": 20499,
+          "prototype": "vanilla.money"
+        },
+        {
+          "id": "loc-0000000000000000-fixture.courtyard.v1.loot-1",
+          "hex": 19300,
+          "prototype": "vanilla.money"
+        },
+        {
+          "id": "loc-0000000000000000-fixture.courtyard.v1.loot-2",
+          "hex": 20903,
+          "prototype": "vanilla.stimpak"
+        }
+      ]
+    },
+    {
+      "seed": "1",
+      "sha256": "4e99acb9387bcb926be2157d395cc2a02a7d8da4a3a5c9876a24fe39b2c06b01",
+      "spawns": [
+        {
+          "id": "loc-0000000000000001-fixture.courtyard.v1.loot-0",
+          "hex": 19497,
+          "prototype": "vanilla.stimpak"
+        },
+        {
+          "id": "loc-0000000000000001-fixture.courtyard.v1.loot-1",
+          "hex": 19900,
+          "prototype": "vanilla.stimpak"
+        },
+        {
+          "id": "loc-0000000000000001-fixture.courtyard.v1.loot-2",
+          "hex": 19701,
+          "prototype": "vanilla.stimpak"
+        }
+      ]
+    },
+    {
+      "seed": "42",
+      "sha256": "07eef3fe9f75e98bf844f3eba0851842c798a4cfb012b50744254b1a39980e5c",
+      "spawns": [
+        {
+          "id": "loc-000000000000002a-fixture.courtyard.v1.loot-0",
+          "hex": 19496,
+          "prototype": "vanilla.money"
+        },
+        {
+          "id": "loc-000000000000002a-fixture.courtyard.v1.loot-1",
+          "hex": 19501,
+          "prototype": "vanilla.money"
+        },
+        {
+          "id": "loc-000000000000002a-fixture.courtyard.v1.loot-2",
+          "hex": 20901,
+          "prototype": "vanilla.money"
+        }
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "sha256": "1dde23306f6c51fe952735206c0852a6be9812c67c8da59a8aa8ebd99be565b4",
+      "spawns": [
+        {
+          "id": "loc-0020000000000001-fixture.courtyard.v1.loot-0",
+          "hex": 20902,
+          "prototype": "vanilla.stimpak"
+        },
+        {
+          "id": "loc-0020000000000001-fixture.courtyard.v1.loot-1",
+          "hex": 19496,
+          "prototype": "vanilla.stimpak"
+        },
+        {
+          "id": "loc-0020000000000001-fixture.courtyard.v1.loot-2",
+          "hex": 19900,
+          "prototype": "vanilla.money"
+        }
+      ]
+    },
+    {
+      "seed": "18446744073709551615",
+      "sha256": "d3d147b73c010c69db417148cacd0a85e0d7cbe2836c05e8f5cff143bb58144a",
+      "spawns": [
+        {
+          "id": "loc-ffffffffffffffff-fixture.courtyard.v1.loot-0",
+          "hex": 19502,
+          "prototype": "vanilla.money"
+        },
+        {
+          "id": "loc-ffffffffffffffff-fixture.courtyard.v1.loot-1",
+          "hex": 20103,
+          "prototype": "vanilla.money"
+        },
+        {
+          "id": "loc-ffffffffffffffff-fixture.courtyard.v1.loot-2",
+          "hex": 19696,
+          "prototype": "vanilla.money"
+        }
+      ]
+    }
+  ]
+}

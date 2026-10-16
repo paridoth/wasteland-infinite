@@ -412,3 +412,24 @@ AGENTS.md
 CLAUDE.md
 GEMINI.md
 opencode.json
+# Wasteland Infinite: never commit owned game data, runtime saves or secrets.
+/runtime/
+/.env
+/.env.*
+!/.env.example
+*.dat
+*.DAT
+*.map
+*.MAP
+*.sav
+*.SAV
+*.db
+*.db-shm
+*.db-wal
+*.sqlite*
+__pycache__/
+*.py[cod]
+/.venv/
+/assets/*
+!/assets/README.md
+/wasteland-location.json

@@ -21,6 +21,10 @@
 #else
 #include "main.h"
 #endif
+#ifdef WASTELAND_INFINITE
+// Wasteland Infinite: headless inspection must precede every SDL/audio call.
+#include "wasteland/runtime.h"
+#endif
 #include "svga.h"
 #include "window_manager.h"
 
@@ -55,6 +59,10 @@ const char* getMacOsBundleResourcesPath()
 
 int main(int argc, char* argv[])
 {
+#ifdef WASTELAND_INFINITE
+    int wiStatus = wasteland::preflight(argc, argv);
+    if (wiStatus >= 0) return wiStatus;
+#endif
     scanUnimplementdParseCommandLineArguments(argc, argv);
 
     int rc;

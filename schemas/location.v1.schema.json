@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:wasteland-infinite:location:v1",
+  "title": "Wasteland Infinite location proof v1",
+  "description": "Closed phase-1 contract. Seed is decimal uint64 text. Domain validation also checks seed range, IDs, connectivity and collisions. Floor/roof inherit known templates; empty layout fields intentionally reserve future version changes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "generator_version",
+    "seed",
+    "id",
+    "type",
+    "biome",
+    "template",
+    "elevation",
+    "walkable",
+    "obstacles",
+    "reserved",
+    "entrances",
+    "exits",
+    "buildings",
+    "rooms",
+    "doors",
+    "transitions",
+    "npcs",
+    "anchors",
+    "spawns"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "generator_version": {
+      "const": 1
+    },
+    "seed": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,19})$"
+    },
+    "id": {
+      "type": "string",
+      "maxLength": 110,
+      "pattern": "^loc-[0-9a-f]{16}-[a-z0-9.-]+$"
+    },
+    "type": {
+      "const": "template-loot-proof"
+    },
+    "biome": {
+      "const": "inherited"
+    },
+    "template": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "map",
+        "floor",
+        "roof"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9.-]{1,80}$"
+        },
+        "map": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32
+        },
+        "floor": {
+          "const": "inherit"
+        },
+        "roof": {
+          "const": "inherit"
+        }
+      }
+    },
+    "elevation": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2
+    },
+    "walkable": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/hex"
+      },
+      "uniqueItems": true,
+      "maxItems": 40000
+    },
+    "obstacles": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/hex"
+      },
+      "uniqueItems": true,
+      "maxItems": 40000
+    },
+    "reserved": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/hex"
+      },
+      "uniqueItems": true,
+      "maxItems": 40000
+    },
+    "entrances": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/hex"
+      },
+      "uniqueItems": true,
+      "maxItems": 1,
+      "minItems": 1
+    },
+    "exits": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/hex"
+      },
+      "uniqueItems": true,
+      "maxItems": 1,
+      "minItems": 1
+    },
+    "buildings": {
+      "type": "array",
+      "maxItems": 0
+    },
+    "rooms": {
+      "type": "array",
+      "maxItems": 0
+    },
+    "doors": {
+      "type": "array",
+      "maxItems": 0
+    },
+    "transitions": {
+      "type": "array",
+      "maxItems": 0
+    },
+    "npcs": {
+      "type": "array",
+      "maxItems": 0
+    },
+    "anchors": {
+      "type": "array",
+      "maxItems": 0
+    },
+    "spawns": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "hex",
+          "prototype"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "hex": {
+            "$ref": "#/$defs/hex"
+          },
+          "prototype": {
+            "enum": [
+              "vanilla.money",
+              "vanilla.stimpak"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "hex": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 39999
+    }
+  }
+}

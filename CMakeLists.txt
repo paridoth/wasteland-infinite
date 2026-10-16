@@ -27,6 +27,9 @@ endif()
 option(FALLOUT_VENDORED "Use vendored third-party libraries" ON)
 option(FALLOUT_AUDIO_OGG "Enable OGG decoding with stb_vorbis when available" ON)
 
+# Wasteland Infinite additions are opt-in and excluded from mapper/legacy builds.
+option(WASTELAND_INFINITE "Build experimental seeded Wasteland mode and offline inspector" OFF)
+
 set(FALLOUT_STB_VORBIS_DIR "" CACHE PATH "Directory containing stb_vorbis.c")
 
 if(ANDROID)
@@ -778,4 +781,9 @@ endif()
 if(CMAKE_SYSTEM_NAME MATCHES "Emscripten")
     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
+endif()
+
+if(WASTELAND_INFINITE)
+    include(CTest)
+    add_subdirectory(src/wasteland)
 endif()
