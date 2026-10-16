@@ -433,3 +433,4 @@ __pycache__/
 /assets/*
 !/assets/README.md
 /wasteland-location.json
+!/AGENTS.md
