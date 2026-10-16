@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "name": "Fallout 2 Community Engine",
+  "url": "https://github.com/fallout2-ce/fallout2-ce.git",
+  "commit": "6de8078f02884db8d006bfff490ba05f3af5aabc",
+  "historical_upstream": "https://github.com/alexbatalov/fallout2-ce",
+  "license": "LICENSE.md",
+  "local_baseline_fix": "src/party_member.cc: preserve MapElevation in partyMemberPlaceMultihex"
+}
