@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "module": "grove-alcove.v1",
+  "cases": [
+    {
+      "seed": "0",
+      "sha256": "9d8bb5c1f5b2bb58e491eea6597e24bc5e7f95c0a27f184514a5a0e967078584",
+      "interior": 20301,
+      "opening": 20100,
+      "blockers": [
+        20101,
+        20102,
+        20300,
+        20302,
+        20501
+      ]
+    },
+    {
+      "seed": "1",
+      "sha256": "1f42496ad72a2eba5b16ce8a9a29826b20835273e08147ee48dbf669a16d5fe6",
+      "interior": 20298,
+      "opening": 20297,
+      "blockers": [
+        20098,
+        20299,
+        20497,
+        20498,
+        20499
+      ]
+    },
+    {
+      "seed": "42",
+      "sha256": "3df95b1a73bb8392d706ee1080ebd9bd5932387905e4b3026dfd7c048e8cdf01",
+      "interior": 20298,
+      "opening": 20297,
+      "blockers": [
+        20098,
+        20299,
+        20497,
+        20498,
+        20499
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "sha256": "b5cd7b98325666c1b1a976516a91a41ffd09b950997ac3b0bca193ed0e7e30d7",
+      "interior": 20501,
+      "opening": 20302,
+      "blockers": [
+        20300,
+        20301,
+        20500,
+        20502,
+        20701
+      ]
+    },
+    {
+      "seed": "18446744073709551615",
+      "sha256": "681c17457cacdcac36e02e6849dc33d431fac2da3e433af05fc5c5a1b1d6722e",
+      "interior": 19901,
+      "opening": 20101,
+      "blockers": [
+        19700,
+        19701,
+        19702,
+        19900,
+        19902
+      ]
+    }
+  ]
+}

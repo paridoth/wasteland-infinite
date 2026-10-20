@@ -98,6 +98,29 @@ int falloutMain(int argc, char** argv)
 
     mainParseCommandLineArguments(argc, argv);
 
+    // Wasteland Infinite bounded native test: initialize the same Narg preset
+    // and new-game template, check placement, then clean up without a game loop.
+#ifdef WASTELAND_INFINITE
+    if (wasteland::nativeProbeRequested()) {
+        int result = 2;
+        if (_proto_dude_init("premade\\combat.gcd") == 0) {
+            randomSeedPrerandom(-1);
+            sfallOnBeforeGameStart();
+            char mapName[] = "artemple.map";
+            _main_load_new(mapName);
+            sfall_gl_scr_exec_start_proc();
+            sfallOnAfterNewGame();
+            sfallOnAfterGameStarted();
+            result = wasteland::placementSucceeded() ? 0 : 2;
+            main_unload_new();
+            main_reset_system();
+        }
+        main_exit_system();
+        autorunMutexClose();
+        return result;
+    }
+#endif
+
     // SFALL: Allow to skip intro movies
     int skipOpeningMovies = settings.ui.skip_opening_movies;
     if (skipOpeningMovies < 1) {
@@ -141,7 +164,14 @@ int falloutMain(int argc, char** argv)
                 if (characterSelectorOpen() == 2) {
                     mainMenuFinishSubscreen();
 
-                    gameMoviePlay(MOVIE_ELDER, GAME_MOVIE_STOP_MUSIC);
+#ifdef WASTELAND_INFINITE
+                    const bool skipNewGameIntro = wasteland::skipNewGameIntro();
+#else
+                    constexpr bool skipNewGameIntro = false;
+#endif
+                    if (!skipNewGameIntro) {
+                        gameMoviePlay(MOVIE_ELDER, GAME_MOVIE_STOP_MUSIC);
+                    }
                     randomSeedPrerandom(-1);
 
                     // SFALL: Call "before start" event
@@ -154,6 +184,16 @@ int falloutMain(int argc, char** argv)
                     char* mapNameCopy = compat_strdup(mapName != nullptr ? mapName : _mainMap);
                     _main_load_new(mapNameCopy);
                     free(mapNameCopy);
+
+#ifdef WASTELAND_INFINITE
+                    if (wasteland::layoutGameplayRequested() && !wasteland::placementSucceeded()) {
+                        showMessageBox("Wasteland Infinite: layout proof failed; no generated objects were retained. See debug.log.");
+                        main_unload_new();
+                        main_reset_system();
+                        mainMenuWindowInit();
+                        break;
+                    }
+#endif
 
                     // SFALL: AfterNewGameStartHook.
                     sfall_gl_scr_exec_start_proc();
@@ -361,6 +401,7 @@ static int _main_load_new(char* mapFileName)
     gameMouseSetCursor(MOUSE_CURSOR_NONE);
     mouseShowCursor();
 #ifdef WASTELAND_INFINITE
+    wasteland::resetPlacementStatus();
     if (mapLoadByName(mapFileName) == 0) {
         wasteland::populateNewGame();
     }

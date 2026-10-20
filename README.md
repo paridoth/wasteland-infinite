@@ -3,9 +3,13 @@
 Modified for Wasteland Infinite; upstream attribution and Sustainable Use License
 are preserved below and in LICENSE.md. Personal/noncommercial development.
 
-This isolated checkout contains a working build and an **asset-free procedural
-proof**, plus a compiled runtime placement hook. **Playable/graphical validation
-is pending legitimately owned Fallout 2 data.** No game data was found or downloaded.
+This isolated checkout contains a working build, an **asset-free procedural
+proof**, and a **runtime-validated seed-42 loot overlay on ARTEMPLE.MAP** using
+isolated copies of locally owned Fallout 2 data. The user confirmed visible/pickable
+loot, movement, inventory, combat, exits and save/reload without duplicates. A fresh
+run reproduced the runtime diagnostic byte-for-byte; the disabled-build comparison
+also passed gameplay, music and save/reload checks. This validates the bounded
+proof with the tested assets/preset, not whole-campaign compatibility.
 The original campaign and its native systems remain the engine foundation.
 
 ```sh
@@ -34,13 +38,96 @@ python3 tools/wasteland/stage_runtime.py /path/to/owned/Fallout2
 # Select NEW GAME. Inspect three loot objects near the starting entrance.
 ```
 
-Staging refuses an existing destination, copies archives/loose data, excludes
+Staging refuses an existing destination, copies archives/loose data and sound, excludes
 saves/caches, creates fresh relative config and builds optional CE UI data from
 upstream's tracked files. Original data/configuration are only read. Development
 mode requires that isolated runtime, rejects save/config command-line overrides,
 and only populates a fresh ARTEMPLE.MAP. The synthetic inspector fixture is not
 that map. `wasteland-location.json` is diagnostic output, not a campaign save.
+WI test modes skip the Elder movie on NEW GAME. Fresh staged runtimes default
+to running; Shift retains the native temporary walk behavior.
 No HTTP service, persistent Director, NPC memory or generated quests is claimed yet.
+
+The next proof uses unchanged copies of the pinned temple/cave maps, retaining
+native map names, registry indices, scripts and floor/roof art:
+
+```sh
+python3 tools/wasteland/stage_template.py /path/to/owned/Fallout2
+(cd runtime/proof-template && ../../out/build/wi-dev/fallout2-ce --wi-template-seed=42)
+```
+
+This accepts only the recorded English Steam 303136 archive hashes. It extracts
+with the native DAT tool, records SHA-256 provenance, and keeps reference copies
+under the ignored runtime. Startup rejects missing/changed map copies. Before
+loot placement, `wasteland-template-audit.json` records actual native exit grids,
+registry destinations and current pathfinding from entry. This diagnostic is
+separate from the location contract's return-to-start anchor and is not a save
+checkpoint. The copied temple/cave round trip, music and save/reload passed the
+user's seed-42/Narg check; the village exits were not reachable in the initial
+audit and have not been validated by this proof.
+
+An experimental two-object partition uses the same pinned copies and native art:
+
+```sh
+./out/build/wi-dev/fallout2-ce --wi-inspect-layout=42 # synthetic, no assets
+python3 tools/wasteland/stage_template.py /path/to/owned/Fallout2 --name proof-layout
+(cd runtime/proof-layout && ../../out/build/wi-dev/fallout2-ce --wi-layout-seed=42)
+```
+
+The separate v1 layout planner protects the entrance and existing cave routes,
+keeps the remaining local cells connected, and leaves space for three loot
+objects. Runtime duplicates only a verified scriptless, single-hex blocking
+generic scenery/wall prototype already present nearby in the pinned map. It checks visible art,
+rechecks native paths after placement and rolls back props/loot on failure.
+`wasteland-layout.json` is a diagnostic plan, not a save/checkpoint. The previous
+loot/template modes and seed fixtures are retained. For the tested seed-42/Narg
+case it adds two native Tree props to the left of entry; visual checks, movement,
+cave round trip and save/reload passed. This is a small obstacle cluster, not a
+generated room or a MAP writer.
+
+`--wi-probe-layout=42` runs a bounded native Narg initialization and placement
+check in a copied runtime, then exits automatically (zero on success). It still
+requires SDL and owned assets. Two fresh native probes produced identical layout,
+loot and source metadata. Failed interactive layout placement returns to the
+menu with an error notice; it does not continue as a completed proof.
+
+The next bounded layout module is a five-tree alcove with one opening, one loot
+object inside and two outside. It retains the copied map's floor/roof art:
+
+```sh
+./out/build/wi-dev/fallout2-ce --wi-inspect-alcove=42 # synthetic, no assets
+python3 tools/wasteland/stage_template.py /path/to/owned/Fallout2 --name proof-alcove
+(cd runtime/proof-alcove && ../../out/build/wi-dev/fallout2-ce --wi-alcove-seed=42)
+# Or use --wi-probe-alcove=42 for native checks followed by automatic exit.
+```
+
+Its independent `grove-alcove.v1` planner samples at most 127 local cells and
+emits `wasteland-alcove.json`; the original location and partition contracts,
+generators and fixtures remain intact. It protects native exit routes, requires
+one reachable opening and three distinct accessible loot cells, and uses the
+same verified prop creation/rollback checks. Two fresh seed-42/Narg native probes
+match byte-for-byte and preserve all three reachable cave exits. The user confirmed
+the requested alcove visibility/pickup, cave round trip and save/reload checks
+passed; logs corroborate native transitions, all save/load handlers and normal exit.
+This validates the bounded seed-42/Narg case with the pinned assets.
+The Director remains unchanged.
+
+The bounded encounter proof adds one seeded ant to the same alcove:
+
+```sh
+./out/build/wi-dev/fallout2-ce --wi-inspect-encounter=42 # synthetic, no assets
+python3 tools/wasteland/stage_template.py /path/to/owned/Fallout2 --name proof-encounter
+(cd runtime/proof-encounter && ../../out/build/wi-dev/fallout2-ce --wi-encounter-seed=42)
+# --wi-probe-encounter=42 checks native placement and then exits automatically.
+```
+
+`alcove-guard.v1` keeps the ant at least four hexes from entry, off the opening,
+loot and protected exit routes. It resolves a checked native ant prototype,
+initializes normal native health/AP/team/AI, and removes only its freshly
+allocated script before that script can run. Initiate combat to test its native
+AI. `wasteland-encounter.json` is a placement diagnostic, not a campaign save.
+The seed-42/Narg check passed native combat, live/dead save persistence and cave
+travel; see the validation record for scope and preserved evidence.
 
 Source: https://github.com/fallout2-ce/fallout2-ce.git at
 `6de8078f02884db8d006bfff490ba05f3af5aabc` (tag `wi-upstream-baseline`).

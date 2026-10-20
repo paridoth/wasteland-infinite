@@ -7,6 +7,7 @@
 #include <map>
 #include <stdexcept>
 #include <string>
+#include <iterator>
 
 namespace wasteland {
 Options parseOptions(int argc, char** argv)
@@ -18,6 +19,16 @@ Options parseOptions(int argc, char** argv)
         if (argc != 2) throw std::invalid_argument("use one --wi option alone; native saves/config overrides are not supported in the proof");
         const std::string inspect = "--wi-inspect=";
         const std::string develop = "--wi-dev-seed=";
+        const std::string copied = "--wi-template-seed=";
+        const std::string layout = "--wi-layout-seed=";
+        const std::string inspectLayout = "--wi-inspect-layout=";
+        const std::string probeLayout = "--wi-probe-layout=";
+        const std::string inspectAlcove = "--wi-inspect-alcove=";
+        const std::string alcove = "--wi-alcove-seed=";
+        const std::string probeAlcove = "--wi-probe-alcove=";
+        const std::string inspectEncounter = "--wi-inspect-encounter=";
+        const std::string encounter = "--wi-encounter-seed=";
+        const std::string probeEncounter = "--wi-probe-encounter=";
         size_t prefix;
         if (arg.rfind(inspect, 0) == 0) {
             options.mode = Mode::Inspect;
@@ -25,6 +36,36 @@ Options parseOptions(int argc, char** argv)
         } else if (arg.rfind(develop, 0) == 0) {
             options.mode = Mode::Develop;
             prefix = develop.size();
+        } else if (arg.rfind(copied, 0) == 0) {
+            options.mode = Mode::CopiedTemplate;
+            prefix = copied.size();
+        } else if (arg.rfind(layout, 0) == 0) {
+            options.mode = Mode::Layout;
+            prefix = layout.size();
+        } else if (arg.rfind(inspectLayout, 0) == 0) {
+            options.mode = Mode::InspectLayout;
+            prefix = inspectLayout.size();
+        } else if (arg.rfind(probeLayout, 0) == 0) {
+            options.mode = Mode::ProbeLayout;
+            prefix = probeLayout.size();
+        } else if (arg.rfind(inspectAlcove, 0) == 0) {
+            options.mode = Mode::InspectAlcove;
+            prefix = inspectAlcove.size();
+        } else if (arg.rfind(alcove, 0) == 0) {
+            options.mode = Mode::Alcove;
+            prefix = alcove.size();
+        } else if (arg.rfind(probeAlcove, 0) == 0) {
+            options.mode = Mode::ProbeAlcove;
+            prefix = probeAlcove.size();
+        } else if (arg.rfind(inspectEncounter, 0) == 0) {
+            options.mode = Mode::InspectEncounter;
+            prefix = inspectEncounter.size();
+        } else if (arg.rfind(encounter, 0) == 0) {
+            options.mode = Mode::Encounter;
+            prefix = encounter.size();
+        } else if (arg.rfind(probeEncounter, 0) == 0) {
+            options.mode = Mode::ProbeEncounter;
+            prefix = probeEncounter.size();
         } else {
             throw std::invalid_argument("unknown Wasteland option");
         }
@@ -87,5 +128,30 @@ void validateRuntimeDirectory(const std::filesystem::path& root)
         }
     }
     if (!expected.empty()) throw std::invalid_argument("runtime config is missing isolated paths");
+}
+
+void validateCopiedTemplateDirectory(const std::filesystem::path& root)
+{
+    namespace fs = std::filesystem;
+    validateRuntimeDirectory(root);
+    auto read = [](const fs::path& path) {
+        if (!fs::is_regular_file(path) || fs::is_symlink(path)
+            || fs::file_size(path) == 0 || fs::file_size(path) > 1048576) {
+            throw std::invalid_argument("missing, oversized or linked copied-template file");
+        }
+        std::ifstream file(path, std::ios::binary);
+        std::string result((std::istreambuf_iterator<char>(file)), {});
+        if (file.bad() || result.size() != fs::file_size(path)) throw std::invalid_argument("cannot read template file");
+        return result;
+    };
+    if (read(root / ".wasteland-template-copy") != "WastelandInfinite art temple copy v1\n"
+        || !fs::is_directory(root / "template-source") || fs::is_symlink(root / "template-source")) {
+        throw std::invalid_argument("use tools/wasteland/stage_template.py for copied-template mode");
+    }
+    for (const auto& name : { "artemple.map", "arcaves.map" }) {
+        if (read(root / "data/maps" / name) != read(root / "template-source" / name)) {
+            throw std::invalid_argument("copied map differs from its staged template reference");
+        }
+    }
 }
 } // namespace wasteland

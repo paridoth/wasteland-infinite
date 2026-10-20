@@ -11,8 +11,20 @@ This milestone does not replace those systems or add real-time combat.
   validation. Synthetic courtyard template, three loot placements, connectivity
   checks, JSON output. No engine pointers, network access, filesystem reads or
   Fallout random-number state. Template ordering is canonicalized.
+- `src/wasteland/layout.*`: independent `entry-partition.v1` planner with a named
+  `layouts/entry-partition.v1` stream, 6..61 local cells and two adjacent blockers.
+  Entrance/native route reservations cannot be occupied; all remaining cells
+  must stay connected with at least three free loot cells. Its separate versioned
+  schema and five synthetic seed fixtures leave location.v1 output unchanged.
 - `src/wasteland/options.*`: strict uint64 options, disabled default, runtime
   directory/config guard. `runtime.*` bridges the generator to verified CE APIs.
+- `src/wasteland/alcove.*`: independent `grove-alcove.v1` module, with 10..127
+  audited cells, five blockers enclosing one interior cell, one opening, one
+  interior reward and two exterior loot objects. Named streams
+  `rooms/grove-alcove.v1`, `maps/grove-alcove.v1` and `loot/grove-alcove.v1` separate
+  geometry, exterior placement and item selection. The closed alcove schema and
+  five fixtures are independent of location.v1 and partition.v1. Diagnostic loot
+  cells are local module data, without campaign/entity persistence bindings.
 - `schemas/location.v1.schema.json`: closed schema with explicit schema and
   generator versions. Decimal string seed preserves all 64 bits through JSON.
   `templates/catalog.v1.json` maps template/prototype symbols to audited engine
@@ -24,6 +36,46 @@ This milestone does not replace those systems or add real-time combat.
   rejects unsupported keywords; it is not a general JSON Schema library.
 - `tools/wasteland/stage_runtime.py`: read-only installation access and actual
   copies into ignored runtime/. Does not reuse original configuration or saves.
+- `tools/wasteland/stage_template.py`: pinned archive/map SHA-256 provenance,
+  native DAT extraction of unchanged ARTEMPLE/ARCAVES copies, separate references
+  and startup marker. `--wi-template-seed` checks equality with those references
+  and audits actual native exit grids before placement. The independent v1 audit
+  schema records native destinations and current entry path lengths; it neither
+  replaces location.v1 nor binds Director/save state. Zero path length means no
+  path found (or the exit is the entry cell), and -1 means the path was not tested.
+- `--wi-layout-seed` adds the partition only to the copied new-game template. The
+  runtime reconstructs/reserves existing native exit paths and verifies all local
+  movement and previously reachable exits after placing props. It resolves its
+  prop from the pinned map's existing scriptless generic scenery/walls, requiring
+  matching loaded prototype/art, no inventory, no hidden/nonblocking/multihex
+  flags, native save/removal capability, and art at most 256x256 with at least 32
+  nontransparent pixels. Automap marker prototypes are explicitly excluded.
+  No external prototype ID is accepted. Objects
+  use native creation, location/rotation, destruction and save serialization.
+- `--wi-probe-layout` initializes Narg and the same native new-game path, returns
+  placement status as an exit code, and cleans up without running the input loop.
+  This owned-asset integration probe is separate from asset-free CTest and visual
+  gameplay validation. Interactive layout failure returns to the menu explicitly.
+- `--wi-alcove-seed` uses the same copied-template guards, native prop audit,
+  rollback, local movement/exit postchecks and new-game-only hook. Only this mode
+  uses occupancy sampling to radius six (at most 127 hexes); earlier modes keep
+  radius four. The opening and protected routes receive no loot. Its independent
+  `wasteland-alcove.json` replaces the location diagnostic for this mode, leaving
+  the location generator unchanged. `--wi-probe-alcove` uses the same bounded
+  Narg probe lifecycle. Inherited floor/roof and native transitions remain intact.
+- `src/wasteland/encounter.*`: independent `alcove-guard.v1` planner and
+  `encounters/alcove-guard.v1` RNG stream. It adds one ant cell at least four
+  physical hexes from entry, protects the alcove opening/loot/native routes,
+  and keeps all other sampled cells connected while the ant blocks its cell.
+  Its synthetic inspector uses a separate radius-four fixture; prior fixtures
+  retain their geometry and bytes. The encounter diagnostic can be validated
+  against the sibling alcove diagnostic for exact geometry/protection agreement.
+- `encounter_runtime.*` resolves the symbolic ant through the native prototype
+  registry, using bounded semantic/art/team/AI checks. Native creation initializes
+  HP/AP; the adapter restores shared derived prototype stats and removes freshly
+  allocated, unexecuted script metadata before placement. Existing script/map
+  local state stays intact. The generated ant uses native combat AI after the
+  player initiates combat; this proof adds no autonomous hostility script.
 
 ## Determinism contract v1
 

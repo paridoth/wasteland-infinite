@@ -60,7 +60,12 @@ class ContractTests(unittest.TestCase):
 
     def test_invalid_options_fail_without_assets(self):
         for option in ['--wi-inspect=-1', '--wi-inspect=18446744073709551616',
-                       '--wi-inspect=01', '--wi-inspect=', '--wi-typo=42']:
+                       '--wi-inspect=01', '--wi-inspect=', '--wi-typo=42',
+                       '--wi-template-seed=-1', '--wi-template-seed=',
+                       '--wi-layout-seed=-1', '--wi-inspect-layout=01',
+                       '--wi-alcove-seed=-1', '--wi-inspect-alcove=01',
+                       '--wi-probe-alcove=18446744073709551616', '--wi-inspect-encounter=01',
+                       '--wi-encounter-seed=-1', '--wi-probe-encounter=18446744073709551616']:
             result = subprocess.run([ENGINE, option], capture_output=True, timeout=10)
             self.assertEqual(result.returncode, 2)
             self.assertIn(b'Wasteland Infinite:', result.stderr)
@@ -70,10 +75,13 @@ class ContractTests(unittest.TestCase):
 
     def test_developer_mode_requires_isolated_runtime(self):
         with tempfile.TemporaryDirectory() as directory:
-            result = subprocess.run([ENGINE, '--wi-dev-seed=42'], cwd=directory,
-                                    capture_output=True, timeout=10)
-            self.assertEqual(result.returncode, 2)
-            self.assertEqual(list(Path(directory).iterdir()), [])
+            for option in ('--wi-dev-seed=42', '--wi-template-seed=42', '--wi-layout-seed=42', '--wi-probe-layout=42',
+                           '--wi-alcove-seed=42', '--wi-probe-alcove=42',
+                           '--wi-encounter-seed=42', '--wi-probe-encounter=42'):
+                result = subprocess.run([ENGINE, option], cwd=directory,
+                                        capture_output=True, timeout=10)
+                self.assertEqual(result.returncode, 2)
+                self.assertEqual(list(Path(directory).iterdir()), [])
 
 
 class JsonTests(unittest.TestCase):

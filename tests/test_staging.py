@@ -22,6 +22,10 @@ class StagingTests(unittest.TestCase):
         (self.source / 'data/maps').mkdir()
         (self.source / 'data/maps/test.MAP').write_bytes(b'fixture-map')
         (self.source / 'data/maps/test.SAV').write_bytes(b'fixture-cache')
+        (self.source / 'data/maps/AUTOMAP.DB').write_bytes(b'original automap cache')
+        (self.source / 'data/worldmap.dat').write_bytes(b'original worldmap cache')
+        (self.source / 'sound/music').mkdir(parents=True)
+        (self.source / 'sound/music/temple.acm').write_bytes(b'fixture-music')
         self.runtime = self.root / 'runtime'
         mock = patch.object(stage_runtime, 'RUNTIME', self.runtime)
         mock.start()
@@ -39,7 +43,10 @@ class StagingTests(unittest.TestCase):
         self.assertEqual((target / 'patch000.dat').read_bytes(), b'fixture-patch')
         self.assertEqual((target / 'data/maps/test.MAP').read_bytes(), b'fixture-map')
         self.assertFalse((target / 'data/maps/test.SAV').exists())
+        self.assertFalse((target / 'data/maps/AUTOMAP.DB').exists())
+        self.assertFalse((target / 'data/worldmap.dat').exists())
         self.assertFalse((target / 'data/SaveGame').exists())
+        self.assertEqual((target / 'sound/music/temple.acm').read_bytes(), b'fixture-music')
         self.assertEqual((target / 'fallout2.cfg').read_text(), stage_runtime.CONFIG)
         self.assertFalse(any(p.is_symlink() for p in target.rglob('*')))
         with self.assertRaises(ValueError):
@@ -55,7 +62,11 @@ class StagingTests(unittest.TestCase):
             stage_runtime.stage(self.source, self.runtime / 'missing')
 
     def test_rejects_symlinks_in_loose_data(self):
-        (self.source / 'data/link').symlink_to(self.source, target_is_directory=True)
-        with self.assertRaises(ValueError):
-            stage_runtime.stage(self.source, self.runtime / 'links')
-        self.assertFalse((self.runtime / 'links').exists())
+        for directory in ('data', 'sound'):
+            with self.subTest(directory=directory):
+                link = self.source / directory / 'link'
+                link.symlink_to(self.source, target_is_directory=True)
+                with self.assertRaises(ValueError):
+                    stage_runtime.stage(self.source, self.runtime / 'links')
+                self.assertFalse((self.runtime / 'links').exists())
+                link.unlink()

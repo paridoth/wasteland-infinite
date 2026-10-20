@@ -5,5 +5,10 @@ namespace wasteland {
 // -1: continue normal startup; otherwise exit with this status.
 int preflight(int argc, char** argv);
 void populateNewGame();
+bool nativeProbeRequested();
+bool placementSucceeded();
+void resetPlacementStatus();
+bool layoutGameplayRequested();
+bool skipNewGameIntro();
 } // namespace wasteland
 #endif

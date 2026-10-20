@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "generator_version": 1,
+  "fixture": "synthetic radius-3 hex patch with protected corridor; no game data",
+  "cases": [
+    {
+      "seed": "0",
+      "sha256": "9f48eb7a0197ea7cb109d79b4370dc3abab2a72ac4cc45d4b5490d81d3f3e37f",
+      "blockers": [
+        20499,
+        20699
+      ]
+    },
+    {
+      "seed": "1",
+      "sha256": "24ac9a77190d310aa7877aa7c786f4880c18cadf275bef7170994ff8e5bc24ff",
+      "blockers": [
+        19500,
+        19700
+      ]
+    },
+    {
+      "seed": "42",
+      "sha256": "b5f172d00058c3904bdf1ea30d160c75693fe44be036a759b3ea007f05aab5ee",
+      "blockers": [
+        20700,
+        20701
+      ]
+    },
+    {
+      "seed": "9007199254740993",
+      "sha256": "0971e2f7e078205ab1efbf82146bede98aaeea0c18877aba0ab657f9d1170a5b",
+      "blockers": [
+        20098,
+        20299
+      ]
+    },
+    {
+      "seed": "18446744073709551615",
+      "sha256": "aa16fd7aa7e1ccb5d71f3ccdfb397deabbd3e8b4d11789c94a7f47c1d9b84925",
+      "blockers": [
+        20498,
+        20499
+      ]
+    }
+  ]
+}

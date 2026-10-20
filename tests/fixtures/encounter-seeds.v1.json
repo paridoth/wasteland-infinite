@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "encounter": "alcove-guard.v1",
+  "cases": [
+    {
+      "seed": "0",
+      "sha256": "eef0f87caffe11e34c510f71328135512176207630a93a3704233cc77f2ae547",
+      "enemy_hex": 19703
+    },
+    {
+      "seed": "1",
+      "sha256": "93761837304f7f5034ded195306f71db5d7210746b2fd1a6babbc13893cb7ee9",
+      "enemy_hex": 20496
+    },
+    {
+      "seed": "42",
+      "sha256": "2ab7060a413154ef9d0e21aea7bb1d46a834cad5764bb8d8e85b09d791fd18e6",
+      "enemy_hex": 20697
+    },
+    {
+      "seed": "9007199254740993",
+      "sha256": "6f66213c6419301b224179bc5da0e4ebb7eae481e6fe1a316e6b48aa99592957",
+      "enemy_hex": 19697
+    },
+    {
+      "seed": "18446744073709551615",
+      "sha256": "16fc96bfcc3d51dae264b71f75d61215148ab30482f0fddb0431b86fc535e650",
+      "enemy_hex": 19896
+    }
+  ]
+}

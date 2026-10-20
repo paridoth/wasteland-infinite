@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "id": "artemple-copy.v1",
+  "asset_build": "Steam 303136, English",
+  "archives": {
+    "master.dat": "9b096d3035edafd4077deeb8ee7877a803b9db98497aa4596624b5c058a84711",
+    "critter.dat": "da83d615967c0bac41fbc50e6b86b3088401ff69ed9d8b2e5be1d6ac0c125bcd",
+    "patch000.dat": "16122a47d9fa1fb2f490d1fb38bb1b7eb8ca8edcf2c06a2c9d78beed812ff564"
+  },
+  "maps": {
+    "artemple.map": {"bytes": 92780, "sha256": "11fc44f3fad558f3cb9e12bf41018a023ef7de8def365d516a44336157fec050"},
+    "arcaves.map": {"bytes": 526972, "sha256": "ba35474b8ea67aec50b6a962a1bc767a87366449d4b631fd1b4ce241847b5bfe"}
+  },
+  "policy": "Copy unchanged from master.dat; preserve native names, registries, scripts, floor/roof and exits. Exit reachability requires engine audit and gameplay.",
+  "runtime_validation": {
+    "date": "2026-10-18",
+    "seed": "42",
+    "preset": "Narg",
+    "scope": "Temple/cave round trip, three loot objects, music, save/reload without duplicates; three of eighteen temple exit grids reachable at initial audit. Village exits not validated."
+  }
+}

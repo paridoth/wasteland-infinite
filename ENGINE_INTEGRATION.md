@@ -19,6 +19,75 @@ the provisional new-game hook after checking an isolated runtime directory.
 Without a WI argument the enabled build follows ordinary startup and the hook
 returns immediately. A map load failure keeps the upstream error handling.
 
+`--wi-template-seed=42` uses the same generator/new-game hook on pinned, unchanged
+owned map copies staged by `tools/wasteland/stage_template.py`. Preflight requires
+both maps to match staged references. `auditCopiedTemplate` snapshots exit-grid
+objects using `isExitGridProtoId`, then resolves `data.misc` destinations through
+`wmMapIdxToName`, checks VFS availability and scalar bounds, and calls `_make_path`
+for active exits on the player's elevation. It writes a separate versioned audit
+before creating loot and refuses placement if no valid reachable exit exists.
+It caps the audit at 128 grids, never moves the player to test an exit, and leaves
+all native registry entries, scripts and transition code intact. Destination
+reference validity is not proof that the destination tile is traversable; the
+tested temple/cave round trip also has direct user confirmation.
+
+`--wi-layout-seed` requires the same copied-template guard and adds two adjacent
+static blockers near entry. `_make_path` rotation buffers (bounded to the native
+800-step capacity) reserve all initially reachable exit routes. The asset-free
+planner preserves local connectivity and free loot capacity. Runtime verifies
+source object/prototype scriptlessness, single-hex blocking flags and loadable
+visible art before creating any props. It accepts only generic scenery/walls
+already present within 12 hexes of entry, explicitly excludes automap markers,
+and rejects no-save/no-remove flags. Candidate ordering is deterministic. After
+placement it rechecks paths to all remaining local cells and all baseline exits.
+Failure rolls back all created props/loot and removes this attempt's layout and
+location diagnostics. Native script dispatch, registries and save handlers are
+unchanged; layout plans never supply arbitrary prototype IDs to creation.
+
+The compile-guarded `--wi-probe-layout` branch in `falloutMain` initializes the
+existing `premade\\combat.gcd` Narg preset and native new-game hooks, reads the
+placement status, cleans up and exits without a game loop. It requires copied
+runtime preflight and does not load or create a save slot. The interactive layout
+branch also checks placement status and returns to the menu on failure, rather
+than treating a canceled overlay as a successful gameplay proof. WI-disabled
+builds exclude these branches.
+
+`--wi-alcove-seed` adds an independent five-prop, single-opening grove module.
+Alcove-based modes sample a radius-six occupancy graph (maximum 127 cells); the
+older modes retain their radius-four sampling. `grove-alcove.v1` reserves native
+routes, leaves one neighbor of the interior open, puts exactly one allowlisted
+loot object inside and two outside, and leaves the opening empty. It shares the
+audited prop source and native postchecks above. `wasteland-alcove.json` records
+the module and its loot; it does not alter location.v1 or act as a checkpoint.
+`--wi-probe-alcove` uses the same Narg initialization/cleanup path. Both probes
+report failure through their exit status; both interactive layout modes return
+to the menu on failure. Source selection is native metadata, never JSON PID input.
+
+`--wi-encounter-seed` composes the same alcove with one seeded, blocking ant.
+`--wi-inspect-encounter` is asset-free; `--wi-probe-encounter` uses the normal
+bounded Narg native probe. The new planner reserves the opening, all loot and
+native routes, excludes physical hex radius three around entry, and preserves
+connectivity with the enemy cell removed. Native postchecks repeat after creating
+the ant. The versioned `wasteland-encounter.json` is independent of the alcove and
+location contracts; its offline validator can check exact paired geometry.
+
+The ant comes from a bounded scan of the native critter prototype registry, not
+a generated PID. Source checks require giant-ant kill type, single-hex/saveable
+flags, non-party identity, visible idle art, hostile native team and an exact AI
+packet match. `objectCreateWithProtoId` initializes HP/AP, and temporarily
+recomputes shared derived stats; the adapter immediately restores the original
+`CritterProtoData`. Creation also allocates prototype script metadata without
+executing its program. The adapter requires a fresh null program, default flags,
+matching owner/index and no allocated map locals or queued events, then removes
+the script via `scriptRemove` and clears `sid`/`scriptIndex` before placement or
+rollback. Native map-local count must remain unchanged. It does not strip scripts
+from existing actors or modify shared prototype script/team/AI values.
+
+Only the generated ant is scriptless; normal engine AI handles its turns once
+the player initiates combat. Combat behavior and live/dead persistence require
+the separate rendered gameplay test. No Director hooks, native save-handler
+changes, registry reordering or raw MAP serialization are introduced.
+
 ## Map loading, tiles and native serialization
 
 - `src/map.cc`: `mapLoadByName(char*)` MODIFIES its input (uppercases it and
@@ -114,9 +183,13 @@ Loading an old save creates/continues a branch; later immutable events must not
 leak into that projection. Test with synthetic native files before adding hooks.
 
 The current `wasteland-location.json` is a diagnostic only, not a checkpoint.
-Native saves in the isolated proof can retain placed objects through upstream
-serialization, but this has NOT been runtime-tested. No Director state exists
-which could safely be bound to them yet.
+In the isolated seed-42 proof, the user confirmed native save/reload retained
+uncollected placed loot without duplicates; logs confirm all 27 load handlers
+completed. Fresh-run runtime diagnostics also matched byte-for-byte. This is
+bounded smoke-test evidence, not full campaign compatibility. No Director state
+exists which could safely be bound to native saves yet. See the
+[validation record](docs/wasteland/VALIDATION.md) for the completed disabled-build
+comparison, tested assets/preset, scope and distinction from future checkpoints.
 
 ## Reference trail
 

@@ -1,9 +1,9 @@
 # Wasteland Infinite additions. Native Linux is the validated build target.
-add_library(wasteland-core STATIC location.cc options.cc)
+add_library(wasteland-core STATIC location.cc layout.cc alcove.cc encounter.cc options.cc)
 target_include_directories(wasteland-core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/..)
 target_compile_options(wasteland-core PRIVATE $<$<CXX_COMPILER_ID:GNU,Clang>:-Wall;-Wextra;-Wpedantic>)
 target_compile_definitions(${EXECUTABLE_NAME} PRIVATE WASTELAND_INFINITE=1)
-target_sources(${EXECUTABLE_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/runtime.cc)
+target_sources(${EXECUTABLE_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/runtime.cc ${CMAKE_CURRENT_SOURCE_DIR}/encounter_runtime.cc)
 target_include_directories(${EXECUTABLE_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/..)
 target_link_libraries(${EXECUTABLE_NAME} wasteland-core)
 
@@ -16,5 +16,5 @@ if(BUILD_TESTING)
         COMMAND ${Python3_EXECUTABLE} -m unittest discover -s tests -p test_*.py -v)
     set_tests_properties(wasteland-contract PROPERTIES
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-        ENVIRONMENT "WI_ENGINE=$<TARGET_FILE:${EXECUTABLE_NAME}>;PYTHONDONTWRITEBYTECODE=1")
+        ENVIRONMENT "WI_ENGINE=$<TARGET_FILE:${EXECUTABLE_NAME}>;WI_DAT_TOOL=$<TARGET_FILE:ce-dat-tool>;PYTHONDONTWRITEBYTECODE=1")
 endif()

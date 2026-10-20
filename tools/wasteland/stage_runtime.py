@@ -19,18 +19,26 @@ critter_dat=critter.dat
 master_patches=data
 critter_patches=data
 language=english
+[sound]
+music_path1=sound/music/
+music_path2=sound/music/
 [screen]
 windowed=1
 resolution_x=1024
 resolution_y=768
 [ui]
 skip_opening_movies=1
+[preferences]
+running=1
 '''
 
 
 def exclude_runtime_files(directory, names):
+    parent = Path(directory).name.lower()
     return [name for name in names if name.lower() == 'savegame'
-            or name.lower().endswith(('.sav', '.bak'))]
+            or name.lower().endswith(('.sav', '.bak'))
+            or (parent == 'data' and name.lower() == 'worldmap.dat')
+            or (parent == 'maps' and name.lower() == 'automap.db')]
 
 
 def stage(source: Path, destination: Path):
@@ -47,13 +55,14 @@ def stage(source: Path, destination: Path):
     # Refuse ambiguous case variants rather than silently selecting assets.
     if len(entries) != len(list(source.iterdir())):
         raise ValueError('installation has ambiguous case-duplicate names')
-    data = entries.get('data')
-    if data:
-        if not data.is_dir() or data.is_symlink():
-            raise ValueError('data must be a normal directory')
-        for path in data.rglob('*'):
-            if path.is_symlink():
-                raise ValueError('source data contains symlinks; prepare a separate plain copy first')
+    for name in ('data', 'sound'):
+        directory = entries.get(name)
+        if directory:
+            if not directory.is_dir() or directory.is_symlink():
+                raise ValueError(f'{name} must be a normal directory')
+            for path in directory.rglob('*'):
+                if path.is_symlink():
+                    raise ValueError(f'source {name} contains symlinks; prepare a separate plain copy first')
     destination.mkdir(parents=True, exist_ok=False)
     for name in ('master.dat', 'critter.dat'):
         shutil.copyfile(entries[name], destination / name)
@@ -63,9 +72,11 @@ def stage(source: Path, destination: Path):
                 raise ValueError('patch archive is not a regular file')
             shutil.copyfile(path, destination / name)
     (destination / 'data').mkdir()
-    if data:
+    if data := entries.get('data'):
         # Skip any saves/caches from the original, including nested savegame dirs.
         shutil.copytree(data, destination / 'data', dirs_exist_ok=True, ignore=exclude_runtime_files)
+    if sound := entries.get('sound'):
+        shutil.copytree(sound, destination / 'sound', ignore=exclude_runtime_files)
     (destination / 'fallout2.cfg').write_text(CONFIG)
     # This marker is last: interrupted copies cannot be launched as WI runtimes.
     (destination / '.wasteland-runtime').write_text('WastelandInfinite sandbox v1\n')

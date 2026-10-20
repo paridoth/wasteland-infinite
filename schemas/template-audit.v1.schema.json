@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Read-only copied ARTEMPLE native exit audit v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "template_id", "map", "entry_hex", "entry_elevation", "entry_rotation", "exits", "reachable_exit_count"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "template_id": {"const": "artemple-copy.v1"},
+    "map": {"const": "ARTEMPLE.MAP"},
+    "entry_hex": {"$ref": "#/$defs/hex"},
+    "entry_elevation": {"$ref": "#/$defs/elevation"},
+    "entry_rotation": {"$ref": "#/$defs/rotation"},
+    "reachable_exit_count": {"type": "integer", "minimum": 0, "maximum": 128},
+    "exits": {"type": "array", "maxItems": 128, "items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["hex", "elevation", "hidden", "destination_map_index", "destination_map", "destination_hex", "destination_elevation", "destination_rotation", "reference_valid", "path_length"],
+      "properties": {
+        "hex": {"$ref": "#/$defs/hex"},
+        "elevation": {"$ref": "#/$defs/elevation"},
+        "hidden": {"enum": [true, false]},
+        "destination_map_index": {"type": "integer", "minimum": -2, "maximum": 10000},
+        "destination_map": {"type": "string", "maxLength": 31, "pattern": "[A-Za-z0-9_.]*"},
+        "destination_hex": {"type": "integer", "minimum": -1, "maximum": 39999},
+        "destination_elevation": {"$ref": "#/$defs/elevation"},
+        "destination_rotation": {"$ref": "#/$defs/rotation"},
+        "reference_valid": {"enum": [true, false]},
+        "path_length": {"type": "integer", "minimum": -1, "maximum": 40000}
+      }
+    }}
+  },
+  "$defs": {
+    "hex": {"type": "integer", "minimum": 0, "maximum": 39999},
+    "elevation": {"type": "integer", "minimum": 0, "maximum": 2},
+    "rotation": {"type": "integer", "minimum": 0, "maximum": 5}
+  }
+}

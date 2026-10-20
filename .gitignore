@@ -433,4 +433,8 @@ __pycache__/
 /assets/*
 !/assets/README.md
 /wasteland-location.json
+/wasteland-layout.json
+/wasteland-alcove.json
+/wasteland-encounter.json
+/wasteland-template-audit.json
 !/AGENTS.md

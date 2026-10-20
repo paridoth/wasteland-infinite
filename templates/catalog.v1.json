@@ -11,7 +11,22 @@
       "id": "engine.artemple.v1",
       "map": "ARTEMPLE.MAP",
       "asset_status": "upstream new-game map name; requires owned game data",
-      "runtime_validated": false
+      "runtime_validated": true,
+      "validation_scope": "Seed 42, Narg, pinned English Steam 303136 assets; native loot overlay and save/reload, byte-identical fresh replay, disabled-build comparison. Copied temple/cave round trip also passed; not whole-campaign validation."
+    },
+    {
+      "id": "engine.artemple.partition.v1",
+      "map": "ARTEMPLE.MAP",
+      "asset_status": "copied-template two-object partition; inherited art and protected native exit routes",
+      "runtime_validated": true,
+      "validation_scope": "Seed 42, Narg, pinned English Steam 303136 assets; two visible Tree props, three pickable loot objects, preserved cave routes, round trip and save/reload. Two fresh native probe outputs match. Not a complete room or campaign validation."
+    },
+    {
+      "id": "engine.artemple.alcove.v1",
+      "map": "ARTEMPLE.MAP",
+      "asset_status": "copied-template grove-alcove.v1 module; five native trees, one opening and inherited floor/roof",
+      "runtime_validated": true,
+      "validation_scope": "Seed 42, Narg, pinned English Steam 303136 assets; user aggregate confirmation of five-tree/opening visibility, interior/exterior loot pickup, cave round trip and save/reload without duplicates. Separate alcove-guard.v1 mode also passed native ant combat and live/dead persistence checks. Logs corroborate native AI, transitions, two complete 27-handler save/load cycles and normal exits; fresh native probes and interactive plans match. Not whole-campaign validation."
     }
   ],
   "prototypes": {
